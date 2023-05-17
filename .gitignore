@@ -1,0 +1,13 @@
+
+.vscode/settings.json
+Library/*
+Logs/*
+Temp/*
++.vs/*
++obj/*
+
+.vsconfig
+-*.sln
++*.sln
++*.csproj
+.vscode
