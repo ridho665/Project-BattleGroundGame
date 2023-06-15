@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
 {
-    public Health health;
     public EnemyAnimation enemyAnimation;
+    public EnemyHealth enemyHealth;
+    public EnemyController enemyController;
 }

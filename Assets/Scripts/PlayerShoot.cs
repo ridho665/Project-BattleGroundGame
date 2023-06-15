@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class PlayerShoot : MonoBehaviour
@@ -19,6 +20,26 @@ public class PlayerShoot : MonoBehaviour
     [SerializeField] private float rifleAttackDamage;
     [SerializeField] private bool isAttackCd;
 
+    [Header("Shooting Logic")]
+    [SerializeField] private int currentAmmo;
+    [SerializeField] private int defaultAmmo;
+    [SerializeField] private int maxAmmo;
+    [SerializeField] private TextMeshProUGUI ammoText;
+
+    public int CurrentAmmo
+    {
+        get => currentAmmo;
+        set
+        {
+            currentAmmo = value;
+            if (currentAmmo >= maxAmmo)
+            {
+                currentAmmo = maxAmmo;
+            }
+            ammoText.text = $"{currentAmmo} / {maxAmmo}";
+        }
+    }
+
     [Header("Visual Effects")]
     [SerializeField] private GameObject muzzleFlashVfx;
     [SerializeField] private GameObject bulletImpactVfx;
@@ -33,12 +54,14 @@ public class PlayerShoot : MonoBehaviour
 
     private void Update() 
     {
+        if (_playerManager.playerHealth.isDead) return;
         AimShot();
         ShootInput();
     }
 
     public void OnGettingWeapon()
     {
+        CurrentAmmo = defaultAmmo;
         hasWeapon = true;
         rifleModel.SetActive(true);
         _playerManager.playerAnimation.animator.SetInteger(_playerManager.playerAnimation.WEAPON_STATE_ANIM_PARAM, 1);
@@ -94,9 +117,16 @@ public class PlayerShoot : MonoBehaviour
     void Shoot()
     {
         if (isAttackCd) return;
+        if (CurrentAmmo <= 0)
+        {
+            muzzleFlashVfx.SetActive(false);
+            return;
+        }
 
         muzzleFlashVfx.SetActive(true);
         StartCoroutine(ShootCoroutine());
+        CurrentAmmo--;
+
         if (Physics.Raycast(mainCamera.position, mainCamera.forward, out RaycastHit hit, shootingRange))
         {
             GameObject effect = null;
@@ -112,6 +142,18 @@ public class PlayerShoot : MonoBehaviour
             effect.transform.LookAt(transform);
             print(hit.collider.gameObject.name);
         }
+    }
+
+    public void GetAmmo()
+    {
+        CurrentAmmo += 50;
+    }
+
+    public void OnDead()
+    {
+        muzzleFlashVfx.SetActive(false);
+        isAiming = false;
+        aimingCam.SetActive(false);   
     }
 
 }

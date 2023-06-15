@@ -11,5 +11,7 @@ public class PlayerAnimation : MonoBehaviour
     public readonly string FIRING_RIFLE_ANIM = "Firing Rifle";
     public readonly string WEAPON_STATE_ANIM_PARAM = "WeaponState"; 
     public readonly string RIFLE_AIM_IDLE_ANIM = "Rifle Aim Idle";
+    public readonly string DEAD_ANIM = "Death";
+
     
 }
